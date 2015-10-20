@@ -1,0 +1,58 @@
+<html>
+<head>
+<meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title></title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-static-top">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <img class="logo" src="images/logo.png"/>
+      <span class="logo-blurb">Gateway to the Inter-Planetary File System</span>
+    </div>
+	<div class="nav navbar-nav navbar-right" style="padding:18px;">
+	  <a href="#" id="settings_btn" class="settings_btn"><span class="glyphicon glyphicon-cog"></span></a>
+	</div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-2">
+			
+			<div class="pull-right" style="margin-top:3px;">
+				<a href="#" id="btnClearFilters"><span style="color:#000000;" class="glyphicon glyphicon-remove-circle"></span></a>
+			</div>
+
+			<div class="tag_filter_header">Tag filters</div>
+
+			<div id="tag_filter_contents"></div>
+			<div class="pull-right">
+				<a href="#" style="margin-top:5px;" id="btnAddContent" class="btn btn-default btn-sm">
+				<span class="glyphicon glyphicon-plus"></span>&nbsp;Add content</a>
+			</div>
+		</div>
+		<div class="col-md-10">
+			<div id="content_list" class="content_list">
+			</div>
+		</div>
+	</div>
+</div>
+
+<script language="javascript" src="jslib/web3.min.js"></script>
+<script language="javascript" src="jslib/ipfsapi.js"></script>
+<script language="javascript" src="jslib/jquery-2.1.4.min.js" onload="window.$ = window.jQuery = module.exports;"></script>
+<script language="javascript" src="bootstrap/js/bootstrap.min.js"></script>
+<script language="javascript" src="jslib/bootbox.min.js"></script>
+<script language="javascript" src="airlock.js"></script>
+
+</body>
+</html>
