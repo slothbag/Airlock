@@ -29,3 +29,5 @@ Release v0.1
 /ipfs/QmYa1uBaWytvMctyu2FU5HYDGxhGaiRhtGDM87ex5VUzke
 http://127.0.0.1:8080/ipfs/QmYa1uBaWytvMctyu2FU5HYDGxhGaiRhtGDM87ex5VUzke
 http://ipfs.io/ipfs/QmYa1uBaWytvMctyu2FU5HYDGxhGaiRhtGDM87ex5VUzke
+
+![UI](/screenshots/ui.png?raw=true)
