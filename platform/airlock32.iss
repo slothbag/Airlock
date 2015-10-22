@@ -6,8 +6,7 @@ DefaultGroupName=Airlock
 UninstallDisplayIcon={app}\Airlock.exe
 Compression=lzma2
 SolidCompression=yes
-OutputDir=.\
-OutputBaseFilename=build\airlock_setup
+OutputDir=build
 
 [Files]
 Source: "..\build\win32\*"; DestDir: "{app}"; Flags: recursesubdirs

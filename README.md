@@ -26,6 +26,6 @@ IPFS on windows throws an error currently for the HTTPHeaders command quoted, yo
 
 Release v0.1
 ============
-/ipfs/Qmad4BGPVjBusXzD7sHuiMQUEgg7Jr8fwQhgSFnDYtJ2iF
-http://127.0.0.1:8080/ipfs/Qmad4BGPVjBusXzD7sHuiMQUEgg7Jr8fwQhgSFnDYtJ2iF
-http://ipfs.io/ipfs/Qmad4BGPVjBusXzD7sHuiMQUEgg7Jr8fwQhgSFnDYtJ2iF
+/ipfs/QmYa1uBaWytvMctyu2FU5HYDGxhGaiRhtGDM87ex5VUzke
+http://127.0.0.1:8080/ipfs/QmYa1uBaWytvMctyu2FU5HYDGxhGaiRhtGDM87ex5VUzke
+http://ipfs.io/ipfs/QmYa1uBaWytvMctyu2FU5HYDGxhGaiRhtGDM87ex5VUzke

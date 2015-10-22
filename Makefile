@@ -30,7 +30,7 @@ getelectron:
 #Build libdmg-hfsplus
 #====================
 getdmg:
-	git clone https://github.com/hamstergene/libdmg-hfsplus
+	git clone https://github.com/vasi/libdmg-hfsplus/
 	cd libdmg-hfsplus && cmake . && make
 	libdmg-hfsplus/dmg/dmg --help
 
@@ -56,15 +56,15 @@ darwin:
 
 #Create Windows Inno Setup package
 #=================================
-win:
-	rm build/win -rf
-	mkdir -p build/win/
-	cp ../electron/win/* build/win/ -R
-	mv build/win/electron.exe build/win/airlock.exe
-	rm build/win/resources/default_app -rf
-	mkdir build/win/resources/app
-	cp gui/* build/win/resources/app -R
-	wine $(ISCC) /Obuild /F$(PROJECT)-$(VERSION)_setup platform/airlock.iss
+win64:
+	rm build/win64 -rf
+	mkdir -p build/win64/
+	cp ../electron/win64/* build/win64/ -R
+	mv build/win64/electron.exe build/win64/airlock.exe
+	rm build/win64/resources/default_app -rf
+	mkdir build/win64/resources/app
+	cp gui/* build/win64/resources/app -R
+	wine $(ISCC) /Obuild /F$(PROJECT)-$(VERSION)_x64_setup platform/airlock64.iss
 
 #Create Windows Inno Setup package
 #=================================
@@ -76,7 +76,7 @@ win32:
 	rm build/win32/resources/default_app -rf
 	mkdir build/win32/resources/app
 	cp gui/* build/win32/resources/app -R
-	wine $(ISCC) /Obuild /F$(PROJECT)-$(VERSION)_setup platform/airlock.iss
+	wine $(ISCC) /Obuild /F$(PROJECT)-$(VERSION)_ia32_setup platform/airlock32.iss
 
 #Create Linux tar.gz
 #===================
@@ -91,7 +91,7 @@ linux:
 	rm build/linux/resources/app/images/airlock_icon.ico
 	tar -cvjf build/$(PROJECT)-$(VERSION).tar.bz2 --transform s/linux/$(PROJECT)-$(VERSION)/ -C build linux/ 
 
-all: darwin win linux
+all: darwin win32 win64 linux
 
 clean:
 	rm build/ -rf
