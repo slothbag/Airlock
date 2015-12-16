@@ -76,16 +76,14 @@ function fetchIPFSManifest(multihash) {
 	ipfs.block.get(multihash, function(err, res) {
 		if(err || !res) return console.error(err)
 
-		if (res.multihash.substring(0,2) != "Qm" || res.multihash.length < 40)
-			return console.log('Invalid multihash');
-
-		//add to contentDB
-		contentDB.push(res);
-
-		//process the tags, add them to unique tag list
-		updateTags(res.tags);
-		content_count++;
-		//$('#content_count').html("Countent Count = " + content_count);
+		res.on('data', function(chunk) {
+			var manifest = chunk.toString();
+			manifest = JSON.parse(manifest);
+			//add to contentDB
+			contentDB.push(manifest);
+			updateTags(manifest.tags);
+			content_count++;
+		});
 	});
 }
 
