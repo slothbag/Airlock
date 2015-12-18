@@ -17,7 +17,10 @@ app.on('window-all-closed', function() {
 app.on('ready', function() {
 
   var icon = 'airlock_icon48x48.png';
-  if (require('os').platform() == 'win32')
+
+  console.log(path.join(__dirname, 'images/' + icon));
+  
+  if (require('os').platform() == 'win32' || require('os').platform() == 'win64')
     icon = 'airlock_icon.ico';
 
   // Create the browser window.
