@@ -24,10 +24,10 @@ geth --rpc --rpcaddr 0.0.0.0
 Note:
 IPFS on windows throws an error currently for the HTTPHeaders command quoted, you will need to add it manually to IPFS config file.
 
-Release v0.1
+Release v0.3
 ============
-/ipfs/QmYa1uBaWytvMctyu2FU5HYDGxhGaiRhtGDM87ex5VUzke
-http://127.0.0.1:8080/ipfs/QmYa1uBaWytvMctyu2FU5HYDGxhGaiRhtGDM87ex5VUzke
-http://ipfs.io/ipfs/QmYa1uBaWytvMctyu2FU5HYDGxhGaiRhtGDM87ex5VUzke
+/ipfs/QmatzUdwWCYibfhaLvE7Fyx5TVADJ7gTGstxgeDaW91Mv2
+http://127.0.0.1:8080/ipfs/QmatzUdwWCYibfhaLvE7Fyx5TVADJ7gTGstxgeDaW91Mv2
+http://ipfs.io/ipfs/QmatzUdwWCYibfhaLvE7Fyx5TVADJ7gTGstxgeDaW91Mv2
 
 ![UI](/screenshots/ui.png?raw=true)

@@ -6,9 +6,9 @@
 # dmg (libdmg-hfsplus)
 # wget, unzip
 
-electron_version = v0.36.0
+electron_version = v0.36.1
 PROJECT = Airlock
-VERSION = 0.2
+VERSION = 0.3
 ISCC = "../inno/ISCC.exe"
 
 none:
@@ -16,7 +16,7 @@ none:
 #Download Electron for desired platforms
 #=======================================
 getelectron:
-	rmdir ../electron -rf
+	rm ../electron -rf
 	mkdir -p ../electron
 	wget -P ../electron/ https://github.com/atom/electron/releases/download/$(electron_version)/electron-$(electron_version)-linux-x64.zip
 	wget -P ../electron/ https://github.com/atom/electron/releases/download/$(electron_version)/electron-$(electron_version)-win32-ia32.zip
