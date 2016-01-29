@@ -24,10 +24,13 @@ geth --rpc --rpcaddr 0.0.0.0
 Note:
 IPFS on windows throws an error currently for the HTTPHeaders command quoted, you will need to add it manually to IPFS config file.
 
-Release v0.3
+Release v0.4
 ============
-/ipfs/QmatzUdwWCYibfhaLvE7Fyx5TVADJ7gTGstxgeDaW91Mv2
-http://127.0.0.1:8080/ipfs/QmatzUdwWCYibfhaLvE7Fyx5TVADJ7gTGstxgeDaW91Mv2
-http://ipfs.io/ipfs/QmatzUdwWCYibfhaLvE7Fyx5TVADJ7gTGstxgeDaW91Mv2
+* Content from Ethereum is displayed as a placeholder before found in IPFS.
+* Content is added to IPFS as objects and not blocks, this enables content to be pinned.
+
+/ipfs/QmWN5fJo7uYKmg62Y2zyBVHZwx1LLyUTcPkguzf1MULprv
+http://127.0.0.1:8080/ipfs/QmWN5fJo7uYKmg62Y2zyBVHZwx1LLyUTcPkguzf1MULprv
+http://ipfs.io/ipfs/QmWN5fJo7uYKmg62Y2zyBVHZwx1LLyUTcPkguzf1MULprv
 
 ![UI](/screenshots/ui.png?raw=true)
