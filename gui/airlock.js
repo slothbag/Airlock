@@ -346,6 +346,16 @@ $(function() {
 
 	try {
 		var mostRecentBlock = web3.eth.blockNumber;
+		var block = web3.eth.getBlock(mostRecentBlock);
+		var bt = new Date(block.timestamp * 1000);
+		//var bt = timeConverter(block.timestamp);
+		var ct = new Date();
+
+		var diff = ct.getTime() - bt.getTime();
+		var seconds = Math.floor(diff / 1000);
+
+
+		$('#last_block').html('Last block ' + seconds + ' seconds ago');
 	}	
 	catch (err) {
 		bootbox.alert(err.message);
@@ -446,3 +456,16 @@ $(function() {
 		});
 	});
 });
+
+function timeConverter(UNIX_timestamp){
+  var a = new Date(UNIX_timestamp * 1000);
+  var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var year = a.getFullYear();
+  var month = months[a.getMonth()];
+  var date = a.getDate();
+  var hour = a.getHours();
+  var min = a.getMinutes();
+  var sec = a.getSeconds();
+  var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
+  return time;
+}
