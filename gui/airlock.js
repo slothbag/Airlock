@@ -48,12 +48,19 @@ function postManifestToIPFS(json) {
 
 	var ipfs = window.ipfsAPI(configIPFSHost, '5001');
 
-	ipfs.block.put(new ipfs.Buffer(JSON.stringify(json)), function(err, res) {
+	var ipfs_object = {'data': JSON.stringify(json)};
+
+	ipfs.object.put(new ipfs.Buffer(JSON.stringify(ipfs_object)), 'json', function(err, res) {
 	    if(err || !res) return console.error(err)
 
-	    var manifest_hash = res.Key;
-		console.log("Manifest hash is " + manifest_hash);
-		postContentToEthereum(manifest_hash);
+	    var manifest_hash = res.Hash;
+
+		//pin the object
+		ipfs.pin.add(manifest_hash, null, function(err, res) {
+			//console.log("Pinned " + manifest_hash);
+
+			postContentToEthereum(manifest_hash);
+		});
 	});
 }
 
@@ -73,45 +80,74 @@ function fetchIPFSManifest(multihash) {
 		return console.log('Invalid multihash');
 
 	var ipfs = window.ipfsAPI(configIPFSHost, '5001');
-	ipfs.block.get(multihash, function(err, res) {
+	ipfs.object.get(multihash, function(err, res) {
 		if(err || !res) return console.error(err)
 
-		res.on('data', function(chunk) {
-			var manifest = chunk.toString();
-			manifest = JSON.parse(manifest);
-			//add to contentDB
-			contentDB.push(manifest);
+		var manifest = res.Data;
+		manifest = JSON.parse(manifest);
+		//add to contentDB
+		for (var a=0;a<contentDB.length;a++) {
+			if (contentDB[a].manifest_multihash == multihash) {
+				contentDB[a].content = manifest;
+				break;
+			}
+		}
+
+		ipfs.pin.add(multihash, null, function() {
+			//console.log("Pinned " + multihash)
 			updateTags(manifest.tags);
 			content_count++;
+			renderWidgets();
 		});
 	});
 }
 
-function renderPageOfWidgets() {
-	console.log('Rendering page of widgets');
+function renderWidgets() {
+
+	var widgetsPerPage = 10;
+	var foundWidgets = 0;
+
+	var bShowWidget;
 
 	$('#content_list').html('');
 
-	for (var a=0;a<contentDB.length;a++) {
-		bFilterTagFound = false;
+	//console.log(contentDB);
+
+	for (var a = contentDB.length-1; a >= 0; a--) {
+		//console.log(contentDB[a]);
+		var targetContent = contentDB[a].content;
+
+		//console.log(targetContent);
+
+		bShowWidget = false;
 		if (tag_filters.length > 0) {
-			var splittags = contentDB[a].tags.split(',');
+			var splittags = targetContent.tags.split(',');
 			for (var t=0;t<splittags.length;t++) {
 				if (tag_filters.indexOf(splittags[t])>=0) {
-					bFilterTagFound = true;
+					bShowWidget = true;
 					break;
 				}
 			}
-
-			if (bFilterTagFound)
-				renderContentWidget(contentDB[a]);
 		}
 		else
-			renderContentWidget(contentDB[a]);
+			bShowWidget = true;
+
+		if (bShowWidget) {
+			if ($.isEmptyObject(targetContent))
+				renderEmptyWidget(contentDB[a].manifest_multihash);
+			else
+				renderWidget(targetContent);
+
+			foundWidgets++;
+		}
+
+		if (foundWidgets >= 10)
+			break;
 	}
 }
 
-function renderContentWidget(content) {
+function renderWidget(content) {
+
   var tags = Array();
   tags = content.tags.split(',');
 
@@ -128,7 +164,7 @@ function renderContentWidget(content) {
   	content.description = '';
 
   var html = '' +
-  '<div class="widget">' +
+  '<div class="widget" id="' + content.multihash + '">' +
   '  <div class="widget-heading">' +
   '    <h3 class="widget-title">'+content.name+'</h3>' +
   //'       <a href="#" class="widget-close"><span class="icon-close">Close</span></a>' +
@@ -153,7 +189,6 @@ function renderContentWidget(content) {
   '</div>';
   //console.log(html);
   $('#content_list').prepend(html);
-
 }
 
 function spawn(multihash) {
@@ -168,7 +203,7 @@ function spawn(multihash) {
 function applyTagFilter(tag) {
 	tag_filters.push(tag);
 	renderTagFilters();
-	renderPageOfWidgets();
+	renderWidgets();
 }
 
 function renderTagFilters() {
@@ -209,11 +244,11 @@ function doDataFetchProcess() {
 	//if array is empty then quit
 	if (pendingContent.length == 0) {
 		DataFetchProcessActive = false;
-		renderPageOfWidgets();
+		renderWidgets();
 		return;
 	}
 
-	console.log(pendingContent[0]);
+	//console.log(pendingContent[0]);
 
 	//remove the first element and set to try again
 	fetchIPFSManifest(pendingContent.shift());
@@ -264,6 +299,31 @@ function showAddModal() {
   );
 }
 
+function renderEmptyWidget(manifest_multihash) {
+	pendingContent.push(manifest_multihash);
+
+ 	var html = '' +
+	  '<div class="widget" id="' + manifest_multihash + '">' +
+	  '  <div class="widget-heading">' +
+	  '    <h3 class="widget-title">Searching IPFS swarm...</h3>' +
+	  '  </div>' +
+
+	  '  <ul class="widget-toolbar">' +
+	  '  </ul>' +
+
+	  '  <ul class="downloads">' +
+	  '    <li class="download download-active">' +
+	  '      <h4 class="download-name"></h4>' +
+	  '      <p class="download-info">' + manifest_multihash + '</p>' +
+	  '    </li>' +
+	  '  </ul>' +
+	  '</div>';
+
+	$('#content_list').prepend(html);
+}
+
+
+
 $(function() {
 
 	//set default hosts
@@ -296,19 +356,42 @@ $(function() {
 	var event_fetcher = ipfsContractInstance.NewContent(null, {fromBlock: 0, toBlock: mostRecentBlock, address: contractAddress});
 	event_fetcher.get(function(error, result) {
 		for (var a=result.length-1; a>=0; a--) {
-			pendingContent.push(result[a].args.multihash)
-			startDataFetchProcess();
+			var manifest_multihash = result[a].args.multihash;
+			var v1_remaps = {
+				"QmSyp9nMeFQDPUfMSCVoab3hhhQjK7fNxrbF2VQYY33j34":"QmQcd2h8xCF7NrHhD7bzfbGFJsEKpmDbhsA19EKrkEzVuJ",
+				"QmXWXR8ku6MmxeZxtZPf4dTK3VwesKQJsFdZnNx7NhpN2A":"QmcdNSsUjr9yH3ECK3G4QmCBtqPybCBwwdGVRFowh5WzHe",
+				"QmWm5kaQKn8JGjXSJaYv9Amg12cxJNXoxrQkoGmRmwkQhS":"QmafY2K196gF82p9Q2qUF17DVfS4feawN7jtK3xc7YTAgY",
+				"QmSas1iUaR6ckwGkTn5kxzXt8j12Y9oet9RfTCCCVy5335":"QmSUYvje9wESrC6kE6yC9WRR71bBT3JuBEA69KH1vjBydv",
+				"QmQr3b5PLLT4RLeUi1sgpUnGq8MfedAxqa9pEREQEXeBoy":"Qmbd2ngVaQtd16nFV4nT2yonA7XhDKWmDbxdDq4FTKY1x2"
+			}
+
+			if (v1_remaps.hasOwnProperty(manifest_multihash)) {
+				console.log("Remaping v1 multihash " + manifest_multihash + ' to ' + v1_remaps[manifest_multihash]);
+				manifest_multihash = v1_remaps[manifest_multihash];
+			}
+
+			pendingContent.push(manifest_multihash);
+			contentDB.push({
+				manifest_multihash: manifest_multihash,
+				content: {}
+			});
 		}
+
+		renderWidgets();
+		startDataFetchProcess();
 	});
 
 	//activate watcher
 	event_watcher = ipfsContractInstance.NewContent('', {fromBlock: mostRecentBlock, toBlock: "latest", address: contractAddress});
 	event_watcher.watch(function(error, result) {
-		pendingContent.push(result.args.multihash)
+		pendingContent.push(result.args.multihash);
+		contentDB.push({
+			manifest_multihash: result.args.multihash,
+			content: {}
+		});
+		renderWidgets();
 		startDataFetchProcess();
 	});
-
-	renderTagFilters();
 
 	//wire up add content button
 	$('#btnAddContent').on('click', function() {
@@ -318,7 +401,7 @@ $(function() {
 	$('#btnClearFilters').on('click', function() {
 		tag_filters = [];
 		renderTagFilters();
-		renderPageOfWidgets();
+		renderWidgets();
 	});
 
 	//wire up settings button
