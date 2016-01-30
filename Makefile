@@ -6,9 +6,9 @@
 # dmg (libdmg-hfsplus)
 # wget, unzip
 
-electron_version = v0.36.6
+electron_version = v0.36.7
 PROJECT = Airlock
-VERSION = 0.4
+VERSION = 0.5
 ISCC = "../inno/ISCC.exe"
 
 none:
