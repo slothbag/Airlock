@@ -1,6 +1,6 @@
 [Setup]
 AppName=Airlock
-AppVersion=0.1
+AppVersion=0.6
 DefaultDirName={pf}\Airlock
 DefaultGroupName=Airlock
 UninstallDisplayIcon={app}\Airlock.exe

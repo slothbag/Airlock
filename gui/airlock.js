@@ -448,8 +448,8 @@ $(function() {
 					if ($('#configEthereumHost').val() != null)
 						localStorage.setItem('EthereumHost', $('#configEthereumHost').val());
 
-		        	var remote = require('remote');
-					remote.getCurrentWindow().reload();
+		        	remote = require('electron').remote;
+					remote.getCurrentWindow().reload()
 		        }
 		      }
 		    }

@@ -1,6 +1,12 @@
-var app = require('app');  // Module to control application life.
-var BrowserWindow = require('browser-window');  // Module to create native browser window.
-var globalShortcut = require('global-shortcut');
+const {app, globalShortcut, BrowserWindow, shell} = require('electron');
+
+// Keep a global reference of the window object, if you don't, the window will
+// be closed automatically when the JavaScript object is garbage collected.
+let win;
+
+//var app = require('app');  // Module to control application life.
+//var BrowserWindow = require('browser-window');  // Module to create native browser window.
+//var globalShortcut = require('global-shortcut');
 var path = require('path');
 
 // Quit when all windows are closed.
@@ -34,7 +40,7 @@ app.on('ready', function() {
   //
 
   var ret = globalShortcut.register('ctrl+r', function() {
-    mainWindow.loadUrl('file://' + __dirname + '/index.html');
+    mainWindow.loadURL('file://' + __dirname + '/index.html');
   });
 
   var ret = globalShortcut.register('ctrl+d', function() {
@@ -42,7 +48,7 @@ app.on('ready', function() {
   });
 
 
-  mainWindow.loadUrl('file://' + __dirname + '/index.html');
+  mainWindow.loadURL('file://' + __dirname + '/index.html');
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
@@ -54,13 +60,14 @@ app.on('ready', function() {
   });
 
   mainWindow.webContents.on('will-navigate', function(evnt, url) {
-      require('shell').openExternal(url);
-      evnt.preventDefault();
+    //const {shell} = require('electron');
+    shell.openExternal(url);
+    evnt.preventDefault();
   });
 
   var webContents = mainWindow.webContents
   webContents.on('will-navigate', function(event, url) {
-    var clipboard = require('clipboard');
-    clipboard.writeText(url);
+    //var clipboard = require('clipboard');
+    //clipboard.writeText(url);
   });
 });
